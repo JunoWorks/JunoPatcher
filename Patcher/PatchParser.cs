@@ -49,7 +49,7 @@ namespace Patcher
                         _gravity.patchListIgnore.Add(new Gravity.Patch
                         {
                             patchNumber = int.Parse(match.Groups[5].Value),
-                            patchFileName = match.Groups[6].Value,
+                            patchFileName = match.Groups[6].Value.Trim(),
                         });
                     }
                     else
@@ -57,7 +57,7 @@ namespace Patcher
                         _gravity.patchList.Add(new Gravity.Patch
                         {
                             patchNumber = int.Parse(match.Groups[2].Value),
-                            patchFileName = match.Groups[3].Value,
+                            patchFileName = match.Groups[3].Value.Trim(),
                         });
                     }
                 }
