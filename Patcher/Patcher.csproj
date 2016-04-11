@@ -70,6 +70,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConfigParser.cs" />
+    <Compile Include="Network.cs" />
+    <Compile Include="PatchParser.cs" />
     <Compile Include="VersionParser.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
