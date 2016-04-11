@@ -40,6 +40,9 @@ namespace Patcher
 
             MatchCollection matches = Regex.Matches(input, pattern, RegexOptions.Multiline);
 
+            _gravity.patchList.Clear();
+            _gravity.patchListIgnore.Clear();
+
             foreach (Match match in matches)
             {
                 try
