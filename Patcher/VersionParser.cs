@@ -21,16 +21,16 @@ namespace Patcher
             }
         }
 
-        public int readVersion()
+        public UInt32 readVersion()
         {
             BinaryReader reader = new BinaryReader(new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.None));
             reader.BaseStream.Position = 0x0;     // The offset you are reading the data from
             byte[] bytes = reader.ReadBytes(0x04); // Read 4 bytes into an array
             reader.Close();
-            return BitConverter.ToInt32(bytes, 0);
+            return BitConverter.ToUInt32(bytes, 0);
         }
 
-        public bool writeVersion(int version)
+        public bool writeVersion(UInt32 version)
         {
             BinaryWriter Writer = null;
 
