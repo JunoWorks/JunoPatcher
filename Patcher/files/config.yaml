@@ -1,0 +1,9 @@
+config:
+  patch_type: main
+  patch_list:
+    - type: main
+      patch_list_url: http://webpatch.ragnarok.co.kr/patch/patch.txt
+      patch_ftp_host: ftp://ragnarok.nowcdn.co.kr:20021/Patch/
+    - type: sakray
+      patch_list_url: http://webpatch.ragnarok.co.kr/patch/patchRE.txt
+      patch_ftp_host: ftp://ragnarok.nowcdn.co.kr:20021/Patch/
