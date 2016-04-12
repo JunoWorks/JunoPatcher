@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <ProgressBar x:Name="progressDownload" HorizontalAlignment="Left" Height="32" Margin="0,247,0,0" VerticalAlignment="Top" Width="517"/>
+        <Label x:Name="labelDownloadProgress" Content="{}{0}/{1} bytes ({2}%)" Margin="0,249,142,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Right" Width="208"/>
+
     </Grid>
 </Window>

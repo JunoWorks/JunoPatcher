@@ -17,11 +17,11 @@ namespace Patcher
             if (!File.Exists(_filePath)) // If not exists, create
             {
                 File.Create(_filePath).Dispose();
-                writeVersion(1); // Write default version (1)
+                writeVersion(3467); // Write default version (1)
             }
         }
 
-        public UInt32 readVersion()
+        public uint readVersion()
         {
             BinaryReader reader = new BinaryReader(new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.None));
             reader.BaseStream.Position = 0x0;     // The offset you are reading the data from
@@ -30,7 +30,7 @@ namespace Patcher
             return BitConverter.ToUInt32(bytes, 0);
         }
 
-        public bool writeVersion(UInt32 version)
+        public bool writeVersion(uint version)
         {
             BinaryWriter Writer = null;
 
