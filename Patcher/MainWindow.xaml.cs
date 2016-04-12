@@ -23,5 +23,21 @@ namespace Patcher
         {
             InitializeComponent();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            /* ---- Step 1 Read config file ---- */
+            var configParser = new ConfigParser(System.AppDomain.CurrentDomain.BaseDirectory + @"\config.yaml");
+            var config = configParser.readConfig();
+
+            /*---- Step 2 Get patch data ---- */
+            var patchData = config.patchList.First(patch => string.Equals(config.patchType, patch.patchType));
+
+            var patchParser = new PatchParser(patchData.patchListURL);
+            if (patchParser.loadPatchData())
+            {
+
+            }
+        }
     }
 }

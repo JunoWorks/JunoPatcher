@@ -34,6 +34,7 @@ namespace Patcher
                 {
                     config.patchList.Add(new Config.patch_list
                     {
+                        patchType = patchList.Children[new YamlScalarNode("type")].ToString(),
                         patchFTPHost = patchList.Children[new YamlScalarNode("patch_ftp_host")].ToString(),
                         patchListURL = patchList.Children[new YamlScalarNode("patch_list_url")].ToString(),
                     });
@@ -59,6 +60,13 @@ namespace Patcher
 
             public class patch_list
             {
+                private string _patchType;
+                public string patchType
+                {
+                    get { return _patchType; }
+                    set { _patchType = value; }
+                }
+
                 private string _patchListURL;
                 public string patchListURL
                 {
