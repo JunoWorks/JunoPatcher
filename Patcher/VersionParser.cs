@@ -17,7 +17,7 @@ namespace Patcher
             if (!File.Exists(_filePath)) // If not exists, create
             {
                 File.Create(_filePath).Dispose();
-                writeVersion(3467); // Write default version (1)
+                writeVersion(2061); // Write default version (1)
             }
         }
 

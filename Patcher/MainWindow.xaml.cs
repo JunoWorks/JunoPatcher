@@ -41,6 +41,10 @@ namespace Patcher
 
         private void FtpClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
+            /*---- Step 5 Apply patch ---- */
+            PatchManager.doPatchGrf(AppDomain.CurrentDomain.BaseDirectory,
+                AppDomain.CurrentDomain.BaseDirectory + ftpDownloader.currentFileName,
+                AppDomain.CurrentDomain.BaseDirectory + "data.grf");
             if (downloadPatchQueue.Any())
             {
                 var nextQueue = downloadPatchQueue.Dequeue();
@@ -50,13 +54,13 @@ namespace Patcher
 
         private void downloadFile(ConfigParser.Config.patch_list patchData, PatchParser.Gravity.Patch patch)
         {
-            ftpDownloader.download(patchData.patchFTPHost + patch.patchFileName, System.AppDomain.CurrentDomain.BaseDirectory + patch.patchFileName, "anonymous", "anonymous@domain.com");
+            ftpDownloader.download(patchData.patchFTPHost + patch.patchFileName, AppDomain.CurrentDomain.BaseDirectory + patch.patchFileName, "anonymous", "anonymous@domain.com");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             /* ---- Step 1 Read config file ---- */
-            var configParser = new ConfigParser(System.AppDomain.CurrentDomain.BaseDirectory + @"\config.yaml");
+            var configParser = new ConfigParser(AppDomain.CurrentDomain.BaseDirectory + @"\config.yaml");
             var config = configParser.readConfig();
 
             /*---- Step 2 Get patch data ---- */
@@ -66,7 +70,7 @@ namespace Patcher
             if (patchParser.loadPatchData())
             {
                 /*---- Step 3 Check current version ---- */
-                var versionParser = new VersionParser(System.AppDomain.CurrentDomain.BaseDirectory + @"\version.txt");
+                var versionParser = new VersionParser(AppDomain.CurrentDomain.BaseDirectory + @"\version.txt");
                 uint currentVersion = versionParser.readVersion();
                 if (patchParser.gravity.patchList.LastOrDefault().patchNumber > versionParser.readVersion()) // New patch found
                 {

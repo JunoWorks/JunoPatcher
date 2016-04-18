@@ -22,6 +22,7 @@ namespace Patcher
         public class ftpDownloader
         {
             public WebClient ftpClient;
+            public string currentFileName;
             public long currentFileSize;
 
             public ftpDownloader()
@@ -31,6 +32,7 @@ namespace Patcher
 
             public void download(string url, string savePath, string user, string password)
             {
+                currentFileName = Path.GetFileName(new Uri(url).LocalPath);
                 currentFileSize = getFileSize(url, user, password);
                 ftpClient.Credentials = new NetworkCredential(user, password);
                 ftpClient.DownloadFileAsync(new Uri(url), savePath);
