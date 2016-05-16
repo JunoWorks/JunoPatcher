@@ -23,12 +23,11 @@ namespace Patcher
         Network.ftpDownloader ftpDownloader;
         Queue<PatchParser.Gravity.Patch> downloadPatchQueue;
         ConfigParser.Config.patch_list patchData;
-        PatchManager patchManager;
+
         public MainWindow()
         {
             InitializeComponent();
             ftpDownloader = new Network.ftpDownloader();
-            patchManager = new PatchManager();
             ftpDownloader.ftpClient.DownloadFileCompleted += FtpClient_DownloadFileCompleted;
             ftpDownloader.ftpClient.DownloadProgressChanged += FtpClient_DownloadProgressChanged;
         }
@@ -43,7 +42,7 @@ namespace Patcher
         private void FtpClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             /*---- Step 5 Apply patch ---- */
-            patchManager.doPatchGrf(AppDomain.CurrentDomain.BaseDirectory,
+            PatchManager.doPatchGrf(AppDomain.CurrentDomain.BaseDirectory,
                 AppDomain.CurrentDomain.BaseDirectory + ftpDownloader.currentFileName,
                 AppDomain.CurrentDomain.BaseDirectory + "data.grf");
             if (downloadPatchQueue.Any())
