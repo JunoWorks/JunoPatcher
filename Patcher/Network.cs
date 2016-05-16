@@ -5,9 +5,9 @@ using System.Text;
 
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Patcher
 {
@@ -34,21 +34,30 @@ namespace Patcher
             {
                 currentFileName = Path.GetFileName(new Uri(url).LocalPath);
                 currentFileSize = getFileSize(url, user, password);
+                if (currentFileSize == 0) return; // File not found or other http error
                 ftpClient.Credentials = new NetworkCredential(user, password);
                 ftpClient.DownloadFileAsync(new Uri(url), savePath);
             }
 
             private long getFileSize(string url, string user, string password)
             {
-                FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(url));
-                request.Proxy = null;
-                request.Credentials = new NetworkCredential(user, password);
-                request.Method = WebRequestMethods.Ftp.GetFileSize;
+                try
+                {
+                    FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(new Uri(url));
+                    request.Proxy = null;
+                    request.Credentials = new NetworkCredential(user, password);
+                    request.Method = WebRequestMethods.Ftp.GetFileSize;
 
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-                long size = response.ContentLength;
-                response.Close();
-                return size;
+                    FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                    long size = response.ContentLength;
+                    response.Close();
+                    return size;
+                }
+                catch (WebException wex)
+                {
+                    return 0;
+                }
             }
         }
 
