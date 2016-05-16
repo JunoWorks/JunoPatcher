@@ -11,26 +11,23 @@ namespace Patcher
 {
     class PatchManager
     {
-        public static void doPatchGrf(string roDirectory, string grfPatch, string grfTarget)
+        GrfHolder _grfSource = new GrfHolder();
+        GrfHolder _grfAdd = new GrfHolder();
+
+        public void doPatchGrf(string roDirectory, string grfPatch, string grfTarget)
         {
             var patcherExeName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
             if (grfPatch.IsExtension(".grf", ".gpf"))
             {
-                using (var output = new GrfHolder(grfTarget, GrfLoadOptions.OpenOrNew))
-                {
-                    using (var grf = new GrfHolder(grfPatch))
-                    {
-                        //output.Merge(grf);
-                        //output.Patch(grf, "test.grf");
-                        if (!output.IsBusy)
-                        {
-                            output.QuickMerge(grf);
-                            //output.QuickSave();
-                        }
-                    }
-                }
+                if (!_grfSource.IsOpened) _grfSource.Open(grfTarget);
+                else _grfSource.Reload();
 
-            } 
+                _grfAdd.Open(grfPatch);
+
+                _grfSource.QuickMerge(_grfAdd, SyncMode.Synchronous);
+                _grfSource.Commands.ClearCommands();
+                _grfAdd.Close();
+            }
             else if (grfPatch.IsExtension(".rgz"))
             {
                 using (var rgz = new Rgz(grfPatch))
@@ -47,6 +44,8 @@ namespace Patcher
                 }
             }
             else throw new InvalidDataException("Invalid extension, must be grf, gpf or rgz");
+            
+
             GrfPath.Delete(grfPatch);
         }
     }
