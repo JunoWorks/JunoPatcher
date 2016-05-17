@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GRF.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,14 @@ namespace Patcher
         PatchManager patchManager;
         VersionParser versionParser;
         ConfigParser configParser;
+        string grfPath;
+
         public MainWindow()
         {
             InitializeComponent();
             versionParser = new VersionParser(AppDomain.CurrentDomain.BaseDirectory + @"\version.txt");
             configParser = new ConfigParser(AppDomain.CurrentDomain.BaseDirectory + @"\config.yaml");
+            grfPath = AppDomain.CurrentDomain.BaseDirectory + "data.grf";
             ftpDownloader = new Network.ftpDownloader();
             patchManager = new PatchManager();
             ftpDownloader.ftpClient.DownloadFileCompleted += FtpClient_DownloadFileCompleted;
@@ -49,14 +53,13 @@ namespace Patcher
             /*---- Step 5 Apply patch ---- */
             patchManager.doPatchGrf(AppDomain.CurrentDomain.BaseDirectory,
                 AppDomain.CurrentDomain.BaseDirectory + ftpDownloader.currentFileName,
-                AppDomain.CurrentDomain.BaseDirectory + "data.grf");
+                grfPath);                                                                                                                       
 
-            /*---- Step 6 Update local version ---- */
-            versionParser.writeVersion(downloadPatchQueue.Last().patchNumber);
-
-            /*---- Step n Download next patch ---- */
+            /*---- Step 6 Download next patch ---- */
             if (downloadPatchQueue.Any())
             {
+                /*---- Step 7 Update local version ---- */
+                versionParser.writeVersion(downloadPatchQueue.FirstOrDefault().patchNumber);
                 var nextQueue = downloadPatchQueue.Dequeue();
                 downloadFile(patchData, nextQueue);
             }
@@ -65,10 +68,16 @@ namespace Patcher
         private void downloadFile(ConfigParser.Config.patch_list patchData, PatchParser.Gravity.Patch patch)
         {
             ftpDownloader.download(patchData.patchFTPHost + patch.patchFileName, AppDomain.CurrentDomain.BaseDirectory + patch.patchFileName, "anonymous", "anonymous@domain.com");
+            labelFileName.Content = patch.patchFileName;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!System.IO.File.Exists(grfPath)) {
+                var sourceGrf = new GrfHolder(grfPath, GrfLoadOptions.New);
+                sourceGrf.QuickSave();
+                sourceGrf.Close();
+            }
             /* ---- Step 1 Read config file ---- */
             var config = configParser.readConfig();
 
@@ -80,7 +89,8 @@ namespace Patcher
             {
                 /*---- Step 3 Check current version ---- */
                 uint currentVersion = versionParser.readVersion();
-                if (patchParser.gravity.patchList.LastOrDefault().patchNumber > versionParser.readVersion()) // New patch found
+                var abc = patchParser.gravity.patchList.LastOrDefault().patchNumber;
+                if (patchParser.gravity.patchList.LastOrDefault().patchNumber > currentVersion) // New patch found
                 {
                     /*---- Step 4 Download patch ---- */
                     downloadPatchQueue = new Queue<PatchParser.Gravity.Patch>(patchParser.gravity.patchList);
@@ -90,8 +100,18 @@ namespace Patcher
                         else break;
                     }
                     downloadFile(patchData, downloadPatchQueue.Dequeue());
+                   
+                } else
+                {
+                    // No new patch
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            patchManager.cancelPath();
+            e.Cancel = false;
         }
     }
 }

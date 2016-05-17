@@ -6,6 +6,7 @@ using GRF.FileFormats.RgzFormat;
 using GRF.FileFormats.ThorFormat;
 using GRF.IO;
 using Utilities.Extension;
+using System.Threading;
 
 namespace Patcher
 {
@@ -45,8 +46,18 @@ namespace Patcher
             }
             else throw new InvalidDataException("Invalid extension, must be grf, gpf or rgz");
             
-
             GrfPath.Delete(grfPatch);
+        }
+
+        public void cancelPath()
+        {
+            if (_grfSource != null) { if (!_grfSource.IsClosed) { _grfSource.Cancel(); } }
+                
+
+            while (_grfSource != null && _grfSource.IsOpened && _grfSource.IsBusy)
+            {
+                Thread.Sleep(200);
+            }
         }
     }
 }
