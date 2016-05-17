@@ -51,7 +51,7 @@ namespace Patcher
                     {
                         _gravity.patchListIgnore.Add(new Gravity.Patch
                         {
-                            patchNumber = int.Parse(match.Groups[5].Value),
+                            patchNumber = uint.Parse(match.Groups[5].Value),
                             patchFileName = match.Groups[6].Value.Trim(),
                         });
                     }
@@ -59,7 +59,7 @@ namespace Patcher
                     {
                         _gravity.patchList.Add(new Gravity.Patch
                         {
-                            patchNumber = int.Parse(match.Groups[2].Value),
+                            patchNumber = uint.Parse(match.Groups[2].Value),
                             patchFileName = match.Groups[3].Value.Trim(),
                         });
                     }
@@ -80,8 +80,8 @@ namespace Patcher
 
             public class Patch
             {
-                private int _patchNumber;
-                public int patchNumber
+                private uint _patchNumber;
+                public uint patchNumber
                 {
                     get { return _patchNumber; }
                     set { _patchNumber = value; }
