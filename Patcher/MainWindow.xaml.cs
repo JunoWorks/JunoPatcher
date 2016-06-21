@@ -75,7 +75,8 @@ namespace Patcher
         {
             if (!System.IO.File.Exists(grfPath)) {
                 var sourceGrf = new GrfHolder(grfPath, GrfLoadOptions.New);
-                sourceGrf.QuickSave();
+                sourceGrf.IsNewGrf = true;
+                sourceGrf.Save(grfPath, SyncMode.Synchronous);
                 sourceGrf.Close();
             }
             /* ---- Step 1 Read config file ---- */
